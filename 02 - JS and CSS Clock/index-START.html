@@ -62,12 +62,44 @@
       background: black;
       position: absolute;
       top: 50%;
+      /* transform-origin - 중심점 잡기 */
+      /* https://developer.mozilla.org/en-US/docs/Web/CSS/transform-origin */
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      /* 움직임의 정도(하나의 동작이 완료되는 시간 지정 클수록 부드러움) */
+      /* transition은 두 개의 스타일이 필요하다. 즉, 초기상태 -> 종료 상태가 명확해야 애니메이션 효과를 낼 수 있다.(ex 마우스 오버 ..) */
+      transition: all 0.05s;
+      /* 가속도 처리 함수 */
+      /* 큐빅 베지어 곡선(곡률에 따른 시간 가속 / 감속 조절) */
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
     }
 
   </style>
 
   <script>
+    const hourHand = document.querySelector('.hour-hand')
+    const minsHand = document.querySelector('.min-hand')
+    const secondHand = document.querySelector('.second-hand')
 
+  function setDate() {
+    const now = new Date()
+
+    const seconds = now.getSeconds();
+    const secondsDegrees = ((seconds / 60) * 360) + 90;
+    secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+
+    const mins = now.getMinutes();
+    const minsDegrees = ((mins / 60)*360) + ((seconds/60)*6) + 90;
+    minsHand.style.transform = `rotate(${minsDegrees}deg)`;
+
+    const hour = now.getHours();
+    const hourDegrees = ((hour / 12)*360) + ((mins / 60)*30) + 90;
+    hourHand.style.transform = `rotate(${hourDegrees}deg)`;
+  }
+  // 주기적으로 setDate 함수 실행(1초 마다)
+  setInterval(setDate, 1000);
+
+  setDate();
 
   </script>
 </body>
