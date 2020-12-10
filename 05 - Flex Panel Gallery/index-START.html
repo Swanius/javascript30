@@ -26,6 +26,7 @@
     .panels {
       min-height: 100vh;
       overflow: hidden;
+      display: flex;
     }
 
     .panel {
@@ -43,8 +44,12 @@
       font-size: 20px;
       background-size: cover;
       background-position: center;
+      flex: 1;
+      justify-content: center;
+      display: flex;
+      flex-direction: column;
     }
-
+    
     .panel1 { background-image:url(https://source.unsplash.com/gYl-UtwNg_I/1500x1500); }
     .panel2 { background-image:url(https://source.unsplash.com/rFKUFzjPYiQ/1500x1500); }
     .panel3 { background-image:url(https://images.unsplash.com/photo-1465188162913-8fb5709d6d57?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&w=1500&h=1500&fit=crop&s=967e8a713a4e395260793fc8c802901d); }
@@ -56,7 +61,22 @@
       margin: 0;
       width: 100%;
       transition: transform 0.5s;
+      flex: 1 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
+    /* https://developer.mozilla.org/ko/docs/Web/CSS/transform */
+    /* 
+      translateY는 Y축 방향으로 얼마만큼 움직일지에 대한 애니메이션 
+      panel의 first-child & last-child를 처음에 각각 위와 아래 화면 밖으로 위치시킴
+      script의 click이벤트와 transitionend이벤트 발생 시 translateY는 0이므로
+      다시 원래의 위치로 돌아온다.
+    */
+    .panel > *:first-child { transform: translateY(-100%); }
+    .panel.open-active > *:first-child { transform: translateY(0); }
+    .panel > *:last-child { transform: translateY(100%); }
+    .panel.open-active > *:last-child { transform: translateY(0); }
 
     .panel p {
       text-transform: uppercase;
@@ -70,7 +90,14 @@
     }
 
     .panel.open {
+      flex: 5;
       font-size: 40px;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .panel p {
+        font-size: 1em;
+      }
     }
 
   </style>
@@ -105,7 +132,37 @@
   </div>
 
   <script>
+    const panels = document.querySelectorAll('.panel')
 
+    // click이벤트 발생 시 함수 발동
+    // click시 open이라는 class가 토글됨
+    function toggleOpen() {
+      console.log('Hello');
+      this.classList.toggle('open');
+    }
+
+    // e.propertyName이 flex의 속성을 가지고 있을 경우에
+    // open-active를 토글함
+    function toggleActive(e) {
+      console.log(e.propertyName);
+      if (e.propertyName.includes('flex')) {
+        this.classList.toggle('open-active');
+      }
+    }
+
+    panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+
+    // transitionend는 transition이 끝났을 때 발동하는 이벤트
+    // 다른 브라우저간의 이벤트 이름은 다음과 같다.
+
+    // var transEndEventNames = {
+    // 'WebkitTransition' : 'webkitTransitionEnd',
+    // 'MozTransition'    : 'transitionend',
+    // 'OTransition'      : 'oTransitionEnd otransitionend',
+    // 'msTransition'     : 'MSTransitionEnd',
+    // 'transition'       : 'transitionend'
+    // },
+    panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
   </script>
 
 
