@@ -7,6 +7,56 @@
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
 <script>
+  const canvas = document.querySelector('#draw');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  ctx.strokeStyle = '#BADA55';
+  ctx.lineCap = 'round'; // 선의 모양
+  ctx.lineJoin = 'round'; // 꺾어지는 부분의 모양
+  ctx.lineWidth = 100; // 선 두께
+
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+  let hue = 0;
+  let direction = true;
+
+  function draw(e) {
+    if (!isDrawing) return; // mousedown이 아닐 경우 stop
+    console.log(e)
+    ctx.strokeStyle = `hsl(${hue},100%,50%)`
+    ctx.beginPath(); // 경로 생성
+    ctx.moveTo(lastX, lastY); // 펜을 x,y좌표로 옮김
+    ctx.lineTo(e.offsetX, e.offsetY); // 현재의 드로잉 위치부터 해당 x, y까지 선을 그림
+    ctx.stroke(); // 윤곽선을 이용하여 도형을 그림
+
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+
+    hue++; // hsl색상 (hue, 채도, 명도)
+    if (hue >= 360) {
+      hue = 0;
+    }
+    if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+      direction = !direction;
+    }
+    
+    // direction이 true일 경우 선의 두께를 늘리고, 반대의 경우 줄임
+    if (direction) {
+      ctx.lineWidth++;
+    } else {
+      ctx.lineWidth--;
+    }
+  }
+  
+  canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY]
+  });
+
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseover', () => isDrawing = false);
 </script>
 
 <style>
