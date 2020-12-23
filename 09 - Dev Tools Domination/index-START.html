@@ -18,29 +18,53 @@
     }
 
     // Regular
-
-    // Interpolated
-
-    // Styled
-
-    // warning!
-
-    // Error :|
-
+    console.log('기본')
     // Info
+    console.info('정보')
+    // warning!
+    console.warn("경고")
+    // Error :|
+    console.error('에러 메세지')
+    // Interpolated
+    console.log('hellow I am a %s string!', '👨')
+    // Styled
+    console.log('%c styling!', 'font-size:50px; background:red')
 
     // Testing
+    // assert: 첫 번째 매개변수가 false면, 메시지와 스택 추적
+    const p = document.querySelector('p');
+
+    console.assert(p.classList.contains('ouch'), 'That is wrong!')
 
     // clearing
+    // console.clear()
 
     // Viewing DOM Elements
-
+    console.log(p)
+    console.dir(p)
     // Grouping together
-
+    dogs.forEach(dog => {
+      console.groupCollapsed(`${dog.name}`)
+      console.log(`This is ${dog.name}`);
+      console.log(`${dog.name} is ${dog.age} years old`);
+      console.groupEnd(`${dog.name}`)
+    })
     // counting
-
+    // counting
+    console.count('오');
+    console.count('수');
+    console.count('완');
+    console.count('오');
+    console.count('수');
+    console.count('완');
     // timing
-
-  </script>
+    console.time('fetching data');
+    fetch('https://api.github.com/users/wesbos')
+      .then(data => data.json())
+      .then(data => {
+        console.timeEnd('fetching data');
+        console.log(data);
+      })
+</script>
 </body>
 </html>
