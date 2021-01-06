@@ -58,6 +58,34 @@
       };
     }
 
+    // 이미지들 불러오기
+    const sliderImages = document.querySelectorAll('.slide-in')
+
+
+    function checkSlide(e) {
+      sliderImages.forEach(sliderImage => {
+        // half way through the image
+        // (스크롤 한 길이 + 현재 창의 높이) - 이미지의 높이 / 2
+        const slideInAt = (window.scrollY + window.innerHeight) 
+        - sliderImage.height / 2;
+        // 이미지의 아래 끝
+        const imageBottom = sliderImage.offsetTop + sliderImage.height;
+        // 이미지의 반이 보였는지 아닌지 여부
+        const isHalfShown = slideInAt > sliderImage.offsetTop;
+        // 이미지를 지나쳤는지(이미지를 완전히 벗어났는지) 아닌지 여부
+        const isNotScrolledPast = window.scrollY < imageBottom;
+
+        if (isHalfShown && isNotScrolledPast) {
+          sliderImage.classList.add('active')
+        } else {
+          sliderImage.classList.remove('active')
+        }
+      })
+    }
+    
+    // scroll이벤트 발생 시, checkSlide 함수 실행
+    window.addEventListener('scroll', debounce(checkSlide))
+
   </script>
 
   <style>
