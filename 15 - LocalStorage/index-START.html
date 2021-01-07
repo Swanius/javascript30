@@ -25,10 +25,65 @@
     </form>
   </div>
 
+
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem('items'))|| [];
+
+  function addItem(e) {
+    // form태그의 페이지를 reload시키므로 default event(submit)를 실행하지 않도록 막아줘야한다.
+    e.preventDefault();
+
+    // this는 form
+    const text = (this.querySelector('[name=item]')).value;
+    const item = {
+      text,
+      done: false,
+    };
+
+    // 생성한 item을 items 배열에 저장
+    items.push(item)
+
+    // populateList함수 실행
+    populateList(items, itemsList);
+
+
+    // 로컬 스토리지는 key:value 쌍으로 되어있는데, setItem() 의 첫번째 인자는 key의 이름, 두번째는 value
+    // 근데 그냥 items로 value를 넣게되면 파싱이 되지 않은 Object가 보여서 값을 알 수 없음
+    // 그 이유로 JSON 형식으로 바꿔주기 위해 JSON.stringify를 사용한다.
+    localStorage.setItem('items', JSON.stringify(items))
+    // this는 form을 가리킴(form을 querySelector로 찍었으므로)
+    // 글을 작성하고, form을 reset
+    this.reset();
+  }
+
+  // 
+  function populateList(plates = [], platesList) {
+    platesList.innerHTML = plates.map((plate, i) => {
+      return `
+      <li>
+        <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''} />
+        <label for="item${i}">${plate.text}</label>
+      </li>
+      `;
+    }).join('');
+  }
+
+  function toggleDone(e) {
+    if (!e.target.matches('input')) return;
+    const el = e.target;
+    const index = el.dataset.index;
+    items[index].done = !items[index].done;
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
+
+  }
+
+  addItems.addEventListener('submit', addItem);
+  itemsList.addEventListener('click', toggleDone);
+
+  populateList(items, itemsList);
 
 </script>
 
