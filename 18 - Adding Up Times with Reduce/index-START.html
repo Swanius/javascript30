@@ -187,26 +187,27 @@
   // console.log(timeNodes1)
 
   // 우리가 원하는 함수를 사용할 수 없게되므로 Array를 만들기위해 Array.from()을 사용하여 형변환을 시켜준다.
-  const timeNodes = Array.from(document.querySelectorAll('[data-time]'));
-  
-  // seconds의 누적합 구한 후 시/분/초로 분할
+  const timeNodes = Array.from(document.querySelectorAll('[data-time]'))
+
   const seconds = timeNodes
       .map(node => node.dataset.time)
-      .map(timeCode => {
-        const [mins, secs] = timeCode.split(':').map(parseFloat);
-        return (mins * 60) + secs;
+      .map(timeNode => {
+        const [mins, secs] = timeNode.split(':').map(parseFloat);
+        return mins * 60 + secs
       })
-      .reduce((total, vidSeconds) => total + vidSeconds)
-      
+      .reduce((total, vidSeconds) => total + vidSeconds);
+
       let secondsLeft = seconds;
-      // Math.floor은 반올림
+      
       const hours = Math.floor(secondsLeft / 3600);
       secondsLeft = secondsLeft % 3600;
 
       const mins = Math.floor(secondsLeft / 60);
       secondsLeft = secondsLeft % 60;
 
-      console.log(hours, mins, secondsLeft)
+      // 추가적으로 number를 string으로 형변환하여 출력해봤다.
+      const arr = [hours, mins, secondsLeft].map(a => a.toString())
+      console.log(arr.join(':'))
 
 </script>
 </body>
