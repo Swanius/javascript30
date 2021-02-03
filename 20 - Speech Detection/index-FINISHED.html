@@ -13,6 +13,7 @@
   window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
   const recognition = new SpeechRecognition();
+  console.log(recognition)
   // 
   recognition.interimResults = true;
   recognition.lang = 'ko-Kr';
@@ -31,7 +32,7 @@
       p.textContent = poopScript;
 
       if (e.results[0].isFinal) {
-        p = document.createElement('p');
+        let p = document.createElement('p');
         words.appendChild(p);
       }
   });
