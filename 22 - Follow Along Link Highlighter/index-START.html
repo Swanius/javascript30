@@ -26,7 +26,31 @@
     </div>
 
   <script>
-    // 👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀
+    const triggers = document.querySelectorAll('a')
+    const highlight = document.createElement('span')
+    highlight.classList.add('highlight')
+    document.body.appendChild(highlight)
+
+    function highlightLink() {
+      // a태그 마다의 좌표 값(width, height, top/left/bottom/right)를 가져온다.
+      const linkCoords = this.getBoundingClientRect();
+      console.log(linkCoords)
+
+      const coords = {
+        width: linkCoords.width,
+        height: linkCoords.height,
+        // getBoundingClientRect()는 스크롤의 위치에 따라 상대 값을 가지므로, 
+        // 절대값으로 변환하기 위해서 현재의 스크롤 값을 더해줘야 한다.
+        top: linkCoords.top + window.scrollY,
+        left: linkCoords.left + window.scrollX,
+      }
+
+      highlight.style.width = `${coords.width}px`
+      highlight.style.height = `${coords.height}px`
+      highlight.style.transform = `translate(${coords.left}px, ${coords.top}px)`
+    }
+
+    triggers.forEach(a => a.addEventListener('mouseenter', highlightLink));
   </script>
 </body>
 </html>
